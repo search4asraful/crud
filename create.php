@@ -1,15 +1,23 @@
 <?php
   include 'config.php';
 
+  $errors = [];
+  function validateInput($value, $errorMsg) {
+    global $errors;
+    if(empty($value)) {
+      $errors[] = $errorMsg;
+    }else {
+      return $value;
+    }
+  }
   if (isset($_POST['submit'])) {
-    $name = $_POST['name'];
-    $phone = $_POST['phone'];
-    $email = $_POST['email'];
-
+    $name = validateInput($_POST['name'], "Name field is required");
+    $phone = validateInput($_POST['phone'], "Phone field is required");
+    $email = validateInput($_POST['email'], "Email field is required");
+    
+    if (empty($errors)) {
     // SQL Query
-
     $sql = "INSERT INTO users (name, phone, email) values ('$name', '$phone', '$email')";
-
     $result = mysqli_query($connect, $sql);
 
     if($result){
@@ -17,7 +25,8 @@
     }else{
       die(mysqli_error($connect));
     }
-  }
+  } 
+}
 ?>
 
 <!doctype html>
@@ -38,17 +47,28 @@
           </div>
           <div class="card-body">
           <form action="#" method="POST">
+
+          <?php
+          if (!empty($errors)) {
+            echo '<div class="alert alert-danger">';
+            foreach ($errors as $error) {
+              echo '<span>'.$error.'</span><br>';
+            }
+            echo '</div>';
+          }
+          ?>
+
           <div class="mb-3">
             <label for="name" class="form-label">Name</label>
-            <input type="text" name="name" class="form-control" id="name" placeholder="Enter full name" required>
+            <input type="text" name="name" class="form-control" id="name" placeholder="Enter full name">
           </div>
           <div class="mb-3">
             <label for="phone" class="form-label">Phone</label>
-            <input type="tel" name="phone" class="form-control" id="phone" placeholder="Enter phone number" required>
+            <input type="tel" name="phone" class="form-control" id="phone" placeholder="Enter phone number">
           </div>
           <div class="mb-3">
             <label for="email" class="form-label">Email</label>
-            <input type="email" name="email" class="form-control" id="email" placeholder="Enter email address" required>
+            <input type="email" name="email" class="form-control" id="email" placeholder="Enter email address">
           </div>
           <button type="submit" name="submit" class="btn btn-success">Create</button>
         </form>

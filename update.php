@@ -5,21 +5,29 @@
   $sql = "SELECT * FROM users WHERE id=$id";
   $result = mysqli_query($connect, $sql);
   $row = mysqli_fetch_assoc($result);
-    $id = $row['id'];
-    $name = $row['name'];
-    $phone = $row['phone'];
-    $email = $row['email'];
+  $id = $row['id'];
+  $name = $row['name'];
+  $phone = $row['phone'];
+  $email = $row['email'];
 
+  $errors = [];
+  function validateInput($value, $errorMsg) {
+    global $errors;
+    if(empty($value)) {
+      $errors[] = $errorMsg;
+    }else {
+      return $value;
+    }
+  }
   if (isset($_POST['submit'])) {
     $id = $_GET['id'];
-    $name = $_POST['name'];
-    $phone = $_POST['phone'];
-    $email = $_POST['email'];
+    $name = validateInput($_POST['name'], "Name field is required");
+    $phone = validateInput($_POST['phone'], "Phone field is required");
+    $email = validateInput($_POST['email'], "Email field is required");
 
+    if(empty($errors)){
     // SQL Query
-
     $sql = "UPDATE users SET name='$name', phone='$phone', email='$email' WHERE id='$id'";
-
     $result = mysqli_query($connect, $sql);
 
     if($result){
@@ -28,6 +36,7 @@
       die(mysqli_error($connect));
     }
   }
+}
 ?>
 
 <!doctype html>
@@ -48,17 +57,28 @@
           </div>
           <div class="card-body">
           <form action="#" method="POST">
+
+          <?php
+          if (!empty($errors)) {
+            echo '<div class="alert alert-danger">';
+            foreach ($errors as $error) {
+              echo '<span>'.$error.'</span><br>';
+            }
+            echo '</div>';
+          }
+          ?>
+
           <div class="mb-3">
             <label for="name" class="form-label">Name</label>
-            <input type="text" name="name" value="<?php echo "$name";?>" class="form-control" id="name" placeholder="Enter full name" required>
+            <input type="text" name="name" value="<?php echo "$name";?>" class="form-control" id="name" placeholder="Enter full name">
           </div>
           <div class="mb-3">
             <label for="phone" class="form-label">Phone</label>
-            <input type="tel" name="phone" value="<?php echo "$phone";?>" class="form-control" id="phone" placeholder="Enter phone number" required>
+            <input type="tel" name="phone" value="<?php echo "$phone";?>" class="form-control" id="phone" placeholder="Enter phone number">
           </div>
           <div class="mb-3">
             <label for="email" class="form-label">Email</label>
-            <input type="email" name="email" value="<?php echo "$email";?>" class="form-control" id="email" placeholder="Enter email address" required>
+            <input type="email" name="email" value="<?php echo "$email";?>" class="form-control" id="email" placeholder="Enter email address">
           </div>
           <button type="submit" name="submit" class="btn btn-warning">Update info</button>
         </form>
