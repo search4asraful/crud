@@ -3,7 +3,5 @@
 
     if(!$connect){
         die(mysqli_error($connect));
-    }else{
-        echo "Connected";
     }
 ?>
