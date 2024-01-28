@@ -22,8 +22,8 @@
                 <tr>
                 <th scope="col">SL/ID</th>
                 <th scope="col">Name</th>
-                <th scope="col">Email</th>
                 <th scope="col">Phone</th>
+                <th scope="col">Email</th>
                 <th scope="col">Action</th>
                 </tr>
             </thead>
@@ -34,7 +34,8 @@
                     $result = mysqli_query($connect, $sql);
 
                     if($result){
-                        while($row = mysqli_fetch_assoc($result)){
+                        // foreach($result as $row){ //using foreach loop
+                        while($row = mysqli_fetch_assoc($result)){ //using while loop
                             $id = $row['id'];
                             $name = $row['name'];
                             $phone = $row['phone'];
@@ -44,7 +45,7 @@
                             <th scope="row">'.$id.'</th>
                             <td>'.$name.'</td>
                             <td>'.$phone.'</td>
-                            <td>@'.$email.'</td>
+                            <td>'.$email.'</td>
                             <td class="col-md-2">
                                 <a href="update.php?id='.$id.'" class="btn btn-info">Edit</a>
                                 <a href="delete.php?id='.$id.'" class="btn btn-danger">Delete</a>
@@ -52,7 +53,6 @@
                             </tr>';
                         }
                     }
-
                 ?>
             </tbody>
         </table>
