@@ -1,3 +1,6 @@
+<?php
+    include 'config.php';
+?>
 <!doctype html>
 <html lang="en">
   <head>
@@ -17,7 +20,7 @@
             <table class="table table-striped">
             <thead>
                 <tr>
-                <th scope="col">SL</th>
+                <th scope="col">SL/ID</th>
                 <th scope="col">Name</th>
                 <th scope="col">Email</th>
                 <th scope="col">Phone</th>
@@ -25,36 +28,32 @@
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                <th scope="row">1</th>
-                <td>Mark</td>
-                <td>Otto</td>
-                <td>@mdo</td>
-                <td class="col-md-2">
-                    <a href="update.php" class="btn btn-info">Edit</a>
-                    <a href="#" class="btn btn-danger">Delete</a>
-                <td>
-                </tr>
-                <tr>
-                <th scope="row">2</th>
-                <td>Jacob</td>
-                <td>Thornton</td>
-                <td>@fat</td>
-                <td class="col-md-2">
-                    <a href="#" class="btn btn-info">Edit</a>
-                    <a href="#" class="btn btn-danger">Delete</a>
-                <td>
-                </tr>
-                <tr>
-                <th scope="row">3</th>
-                <td>Bird</td>
-                <td>Larry the Bird</td>
-                <td>@twitter</td>
-                <td class="col-md-2">
-                    <a href="#" class="btn btn-info">Edit</a>
-                    <a href="#" class="btn btn-danger">Delete</a>
-                <td>
-                </tr>
+                
+                <?php
+                    $sql = "SELECT * FROM users";
+                    $result = mysqli_query($connect, $sql);
+
+                    if($result){
+                        while($row = mysqli_fetch_assoc($result)){
+                            $id = $row['id'];
+                            $name = $row['name'];
+                            $phone = $row['phone'];
+                            $email = $row['email'];
+                            echo '
+                            <tr>
+                            <th scope="row">'.$id.'</th>
+                            <td>'.$name.'</td>
+                            <td>'.$phone.'</td>
+                            <td>@'.$email.'</td>
+                            <td class="col-md-2">
+                                <a href="update.php?id='.$id.'" class="btn btn-info">Edit</a>
+                                <a href="delete.php?id='.$id.'" class="btn btn-danger">Delete</a>
+                            <td>
+                            </tr>';
+                        }
+                    }
+
+                ?>
             </tbody>
         </table>
         </div>
