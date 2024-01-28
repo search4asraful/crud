@@ -1,3 +1,35 @@
+<?php
+  include 'config.php';
+  $id = $_GET['id'];
+
+  $sql = "SELECT * FROM users WHERE id=$id";
+  $result = mysqli_query($connect, $sql);
+  $row = mysqli_fetch_assoc($result);
+    $id = $row['id'];
+    $name = $row['name'];
+    $phone = $row['phone'];
+    $email = $row['email'];
+
+  if (isset($_POST['submit'])) {
+    $id = $_GET['id'];
+    $name = $_POST['name'];
+    $phone = $_POST['phone'];
+    $email = $_POST['email'];
+
+    // SQL Query
+
+    $sql = "UPDATE users SET name='$name', phone='$phone', email='$email' WHERE id='$id'";
+
+    $result = mysqli_query($connect, $sql);
+
+    if($result){
+      header('location:index.php');
+    }else{
+      die(mysqli_error($connect));
+    }
+  }
+?>
+
 <!doctype html>
 <html lang="en">
   <head>
@@ -18,15 +50,15 @@
           <form action="#" method="POST">
           <div class="mb-3">
             <label for="name" class="form-label">Name</label>
-            <input type="text" name="name" class="form-control" id="name" placeholder="Enter full name" required>
+            <input type="text" name="name" value="<?php echo "$name";?>" class="form-control" id="name" placeholder="Enter full name" required>
           </div>
           <div class="mb-3">
             <label for="phone" class="form-label">Phone</label>
-            <input type="tel" name="phone" class="form-control" id="phone" placeholder="Enter phone number" required>
+            <input type="tel" name="phone" value="<?php echo "$phone";?>" class="form-control" id="phone" placeholder="Enter phone number" required>
           </div>
           <div class="mb-3">
             <label for="email" class="form-label">Email</label>
-            <input type="email" name="email" class="form-control" id="email" placeholder="Enter email address" required>
+            <input type="email" name="email" value="<?php echo "$email";?>" class="form-control" id="email" placeholder="Enter email address" required>
           </div>
           <button type="submit" name="submit" class="btn btn-warning">Update info</button>
         </form>
